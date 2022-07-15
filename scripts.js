@@ -4,8 +4,6 @@ const mainEl = document.querySelector('#main');
 const searchEl = document.querySelector('#search');
 const formEl = document.querySelector('#form');
 
-getData('diego3g');
-
 async function getData(username) {
   const res = await fetch(`${APIURL}${username}`);
   const data = await res.json();
@@ -23,7 +21,7 @@ async function getRepos(username) {
 
 function createCard(user) {
   const { avatar_url, name, bio, followers, following, public_repos } = user;
-
+  console.log(user);
   const cardHTML = `
     <div class="card">
         <div>
@@ -34,14 +32,16 @@ function createCard(user) {
             <p>${user.bio}</p>
 
             <ul class="info">
-                <li>${user.followers}<strong>Followers</strong></li>
-                <li>${user.following}<strong>Following</strong></li>
-                <li>${user.public_repos}<strong>Repos</strong></li>
+                <li><span>Followers:</span> ${user.followers} </li>
+                <li><span>Following:</span> ${user.following} </li>
+                <li><span>Repos:</span> ${user.public_repos} </li>
             </ul>
 
-            <div id="repos"></div>
+            </div>
+        </div>    
+        <div id="repos" class="repos">
+        <h3>${user.login} repos:</h3>
         </div>
-    </div>    
     `;
 
   mainEl.innerHTML = cardHTML;
@@ -65,3 +65,11 @@ function addRepos(repos) {
       reposEl.appendChild(repoEl); // add cada um
     });
 }
+
+formEl.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const username = `${searchEl.value}`;
+
+  username ? getData(username) : '';
+});
